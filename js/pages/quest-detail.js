@@ -1,5 +1,6 @@
 import { cities } from "../data/cities.js";
 import { getQuestById, getQuestProgress, completeTask } from "../services/quest-service.js";
+import { completeQuest } from "../services/reward-service.js";
 import { getState } from "../services/storage.js";
 
 function escapeHTML(value) {
@@ -63,6 +64,146 @@ function renderProgress(progress) {
         <p class="progress-percentage">
             ${progress.percentage}% complete
         </p>
+    `;
+}
+
+function renderCompletionScreen(container, quest, result) {
+    const cityName = getCityName(quest.cityId);
+
+    const rewardMessage = result.isNewCompletion ? `You completed the ${cityName} quest and earned your rewards.` : "This quest has already been completed.";
+
+    container.innerHTML = `
+        <main class="quest-completion">
+            <div class="container">
+                <section class="completion-card" aria-labelledby="completion-title">
+                    <div class="completion-icon" aria-hidden="true">✓</div>
+                    <p class="completion-eyebrow">Quest Complete</p>
+                    <h1 id="completion-title" class="completion-title">
+                        ${escapeHTML(quest.title)}
+                    </h1>
+                    <p class="completion-description">
+                        ${escapeHTML(rewardMessage)}
+                    </p>
+
+                    ${
+                        result.isNewCompletion
+                        ? `
+                            <div class="reward-summary">
+                                <div class="reward-item">
+                                    <span class="reward-label">XP Earned</span>
+                                    <strong class="reward-value">
+                                        +${result.xpEarned} XP
+                                    </strong>
+                                </div>
+
+                                ${
+                                    quest.badge && result.badgeUnlocked
+                                    ? `
+                                        <div class="reward-item">
+                                            <span class="reward-label">Badge Unlocked</span>
+                                            <strong class="reward-value">
+                                                ${escapeHTML(
+                                                    quest.badge.name
+                                                )}
+                                            </strong>
+                                        </div>
+                                    ` : ""
+                                }
+                            </div>
+                        ` : ""
+                    }
+
+                    <div class="completion-actions">
+                        <a class="quest-button" href="./index.html#quests">Back to Quests</a>
+                        <a class="secondary-button" href="./index.html">View Dashboard</a>
+                    </div>
+                </section>
+            </div>
+        </main>
+    `;
+}
+
+function renderAlreadyCompleted(container, quest) {
+    const state = getState();
+
+    container.innerHTML = `
+        <main class="quest-completion">
+            <div class="container">
+                <section class="completion-card" aria-labelledby="completed-title">
+                    <div class="completion-icon" aria-hidden="true">✓</div>
+                        <p class="completion-eyebrow">Quest Completed</p>
+                        <h1 id="completed-title" class="completion-title">
+                            ${escapeHTML(quest.title)}
+                        </h1>
+                        <p class="completion-description">You have already completed this quest.</p>
+                    <div class="reward-summary">
+                        <div class="reward-item">
+                            <span class="reward-label">Current XP</span>
+                            <strong class="reward-value">
+                                ${state.xp} XP
+                            </strong>
+                        </div>
+
+                        ${
+                        quest.badge
+                            ? `
+                            <div class="reward-item">
+                                <span class="reward-label">Badge</span>
+                                <strong class="reward-value">
+                                    ${escapeHTML(
+                                        quest.badge.name
+                                    )}
+                                </strong>
+                            </div>
+                            ` : ""
+                        }
+                    </div>
+
+                    <div class="completion-actions">
+                        <a class="quest-button" href="./index.html#quests">Back to Quests</a>
+                        <a class="secondary-button" href="./index.html">View Dashboard</a>
+                    </div>
+                </section>
+            </div>
+        </main>
+    `;
+}
+
+function bindTaskEvents(container, quest) {
+    const taskButtons = container.querySelectorAll("[data-task-id]");
+
+    taskButtons.forEach(button => {button.addEventListener("click", () => {
+            const taskId = button.dataset.taskId;
+
+            if (!taskId) {
+                return;
+            }
+
+            completeTask(taskId);
+            const progress = getQuestProgress(quest);
+
+            if (progress.isCompleted) {
+                const result = completeQuest(quest);
+                renderCompletionScreen(container, quest, result);
+
+                return;
+            }
+            renderQuestDetail(container, quest.id);
+        });
+    });
+}
+
+function renderQuestNotFound(container) {
+    container.innerHTML = `
+        <main class="quest-detail">
+            <div class="container">
+                <section class="empty-state">
+                    <h1 class="empty-state-title">Quest not found</h1>
+                    <p class="empty-state-description">The quest you are looking for does not exist.</p>
+                    <a class="quest-button" href="./index.html#quests">Back to Quests</a>
+                </section>
+            </div>
+        </main>
     `;
 }
 
@@ -134,38 +275,4 @@ export function renderQuestDetail(container, questId) {
     `;
 
     bindTaskEvents(container, quest);
-}
-
-function bindTaskEvents(container, quest) {
-    const taskButtons = container.querySelectorAll("[data-task-id]");
-
-    taskButtons.forEach(button => {button.addEventListener("click", () => {
-            const taskId = button.dataset.taskId;
-
-            if (!taskId) {
-                return;
-            }
-
-            completeTask(taskId);
-
-            renderQuestDetail(
-                container,
-                quest.id
-            );
-        });
-    });
-}
-
-function renderQuestNotFound(container) {
-    container.innerHTML = `
-        <main class="quest-detail">
-            <div class="container">
-                <section class="empty-state">
-                    <h1 class="empty-state-title">Quest not found</h1>
-                    <p class="empty-state-description">The quest you are looking for does not exist.</p>
-                    <a class="quest-button" href="./index.html#quests">Back to Quests</a>
-                </section>
-            </div>
-        </main>
-    `;
 }

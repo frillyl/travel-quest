@@ -8,22 +8,28 @@ const DEFAULT_STATE = {
     redeemedRewards: []
 };
 
+function createDefaultState() {
+    return structuredClone(DEFAULT_STATE);
+}
+
 export function getState() {
     const rawState = localStorage.getItem(STORAGE_KEY);
 
     if (!rawState) {
-        return structuredClone(DEFAULT_STATE);
+        return createDefaultState();
     }
 
     try {
         const parsedState = JSON.parse(rawState);
 
         return {
-        ...structuredClone(DEFAULT_STATE),
+        ...createDefaultState(),
         ...parsedState
         };
-    } catch {
-        return structuredClone(DEFAULT_STATE);
+    } catch (error) {
+        console.error("Failed to parse Travel Quest state:", error);
+
+        return createDefaultState();
     }
 }
 
@@ -32,4 +38,8 @@ export function saveState(state) {
         STORAGE_KEY,
         JSON.stringify(state)
     );
+}
+
+export function resetState() {
+    localStorage.removeItem(STORAGE_KEY);
 }

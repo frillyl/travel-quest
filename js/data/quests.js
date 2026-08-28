@@ -6,7 +6,11 @@ export const quests = [
         title: "Jakarta Urban Explorer",
         description:"Discover the culture and energy of Indonesia's capital.",
         xp: 500,
-        badgeId: "badge-jakarta-urban",
+        badge: {
+            id: "badge-jakarta-urban",
+            name: "Jakarta Urban Explorer",
+            description: "Completed a culture quest in Jakarta."
+        },
         tasks: [
             { id: "jkt-001", title: "Explore Kota Tua" },
             { id: "jkt-002", title: "Visit a local museum" },
@@ -22,7 +26,11 @@ export const quests = [
         title: "Jakarta Heritage Trail",
         description: "Explore historical places and stories across Jakarta.",
         xp: 500,
-        badgeId: "badge-jakarta-heritage",
+        badge: {
+            id: "badge-jakarta-heritage",
+            name: "Jakarta Heritage Trail",
+            description: "Completed a heritage quest in Jakarta."
+        },
         tasks: [
             { id: "jkt-h001", title: "Visit a heritage building" },
             { id: "jkt-h002", title: "Explore Kota Tua" },
@@ -38,7 +46,11 @@ export const quests = [
         title: "Bandung Culinary Explorer",
         description: "Taste iconic flavors and discover Bandung's food culture.",
         xp: 500,
-        badgeId: "badge-bandung-culinary",
+        badge: {
+            id: "badge-bandung-culinary",
+            name: "Bandung Culinary Explorer",
+            description: "Completed a culinary quest in Bandung."
+        },
         tasks: [
             { id: "bdg-001", title: "Try Batagor" },
             { id: "bdg-002", title: "Try Surabi" },
@@ -54,7 +66,11 @@ export const quests = [
         title: "Bandung Nature Escape",
         description: "Escape the city and explore Bandung's natural surroundings.",
         xp: 500,
-        badgeId: "badge-bandung-nature",
+        badge: {
+            id: "badge-bandung-nature",
+            name: "Bandung Nature Explorer",
+            description: "Completed a nature quest in Bandung."
+        },
         tasks: [
             { id: "bdg-n001", title: "Visit a nature destination" },
             { id: "bdg-n002", title: "Explore a hiking trail" },
@@ -71,7 +87,11 @@ export const quests = [
         description:
         "Walk through Surabaya's history and heritage.",
         xp: 500,
-        badgeId: "badge-surabaya-heritage",
+        badge: {
+            id: "badge-surabaya-heritage",
+            name: "Surabaya Heritage Explorer",
+            description: "Completed a heritage quest in Surabaya."
+        },
         tasks: [
             { id: "sby-001", title: "Visit a historical landmark" },
             { id: "sby-002", title: "Explore a heritage district" },
@@ -88,7 +108,11 @@ export const quests = [
         description:
         "Experience Surabaya through a series of urban challenges.",
         xp: 500,
-        badgeId: "badge-surabaya-adventure",
+        badge: {
+            id: "badge-surabaya-urban",
+            name: "Surabaya Urban Explorer",
+            description: "Completed a urban quest in Surabaya."
+        },
         tasks: [
             { id: "sby-a001", title: "Explore the city center" },
             { id: "sby-a002", title: "Discover a local attraction" },
@@ -105,7 +129,11 @@ export const quests = [
         description:
         "Discover the bold flavors of Medan.",
         xp: 500,
-        badgeId: "badge-medan-culinary",
+        badge: {
+            id: "badge-medan-culinary",
+            name: "Medan Food Explorer",
+            description: "Completed a culinary quest in Medan."
+        },
         tasks: [
             { id: "mdn-001", title: "Try Soto Medan" },
             { id: "mdn-002", title: "Try Bika Ambon" },
@@ -122,7 +150,11 @@ export const quests = [
         description:
         "Find places beyond the usual tourist routes.",
         xp: 500,
-        badgeId: "badge-medan-hidden-gem",
+        badge: {
+            id: "badge-medan-hidden-gem",
+            name: "Medan Food Explorer",
+            description: "Completed a hidden gem quest in Medan."
+        },
         tasks: [
             { id: "mdn-h001", title: "Discover a hidden spot" },
             { id: "mdn-h002", title: "Visit a local neighborhood" },
@@ -139,7 +171,11 @@ export const quests = [
         description:
         "Explore Makassar's coastal landscapes and experiences.",
         xp: 500,
-        badgeId: "badge-makassar-coastal",
+        badge: {
+            id: "badge-makassar-coastal",
+            name: "Makassar Coastal Explorer",
+            description: "Completed an coastal quest in Makassar."
+        },
         tasks: [
             { id: "mks-001", title: "Visit Losari area" },
             { id: "mks-002", title: "Explore the coastline" },
@@ -156,7 +192,11 @@ export const quests = [
         description:
         "Take on an adventure across Makassar.",
         xp: 500,
-        badgeId: "badge-makassar-adventure",
+        badge: {
+            id: "badge-makassar-adventure",
+            name: "Makassar Adventurer Explorer",
+            description: "Completed an adventure quest in Makassar."
+        },
         tasks: [
             { id: "mks-a001", title: "Explore a landmark" },
             { id: "mks-a002", title: "Try a local activity" },

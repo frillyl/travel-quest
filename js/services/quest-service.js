@@ -56,15 +56,22 @@ export function completeTask(taskId) {
     return state;
 }
 
+export function isQuestCompleted(questId) {
+    const state = getState();
+
+    return state.completedQuests.includes(questId);
+}
+
 export function getQuestProgress(quest) {
     const state = getState();
     const completedTasks = quest.tasks.filter(task => state.completedTasks.includes(task.id)).length;
     const totalTasks = quest.tasks.length;
+    const percentage = totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
 
     return {
         completedTasks,
         totalTasks,
-        percentage: totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100),
+        percentage,
         isCompleted: totalTasks > 0 && completedTasks === totalTasks
     };
 }

@@ -277,3 +277,28 @@ function bindQuestButtons(container) {
         });
     });
 }
+
+function renderStats(state) {
+    return `
+        <div class="stat-card">
+            <span class="stat-label">Total XP</span>
+            <strong class="stat-value">
+                ${formatNumber(state.xp)}
+            </strong>
+        </div>
+
+        <div class="stat-card">
+            <span class="stat-label">Quests Completed</span>
+            <strong class="stat-value">
+                ${state.completedQuests.length}
+            </strong>
+        </div>
+
+        <div class="stat-card">
+            <span class="stat-label">Badges</span>
+            <strong class="stat-value">
+                ${state.badges.length}
+            </strong>
+        </div>
+    `;
+}
