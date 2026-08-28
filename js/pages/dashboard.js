@@ -263,22 +263,17 @@ function bindDashboardEvents(container) {
 }
 
 function bindQuestButtons(container) {
-  const questButtons =
-    container.querySelectorAll(
-      "[data-quest-id]"
-    );
+    const questButtons = container.querySelectorAll("[data-quest-id]");
 
-  questButtons.forEach(button => {
-    button.addEventListener("click", () => {
-      const questId =
-        button.dataset.questId;
+    questButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            const questId = button.dataset.questId;
 
-      if (!questId) {
-        return;
-      }
+            if (!questId) {
+                return;
+            }
 
-      window.location.href =
-        `./index.html?quest=${encodeURIComponent(questId)}`;
+            window.location.href = `./index.html?quest=${encodeURIComponent(questId)}`;
+        });
     });
-  });
 }
