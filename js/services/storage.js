@@ -16,9 +16,11 @@ export function getState() {
     }
 
     try {
+        const parsedState = JSON.parse(rawState);
+
         return {
         ...structuredClone(DEFAULT_STATE),
-        ...JSON.parse(rawState)
+        ...parsedState
         };
     } catch {
         return structuredClone(DEFAULT_STATE);
