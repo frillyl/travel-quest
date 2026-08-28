@@ -822,6 +822,239 @@ body {
     border-color: var(--color-text-muted);
 }
 
+/* =========================================================
+   BADGE COLLECTION
+   ========================================================= */
+
+.badge-page {
+    padding-block: var(--space-8);
+}
+
+.badge-page-header {
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-8);
+}
+
+.section-eyebrow {
+    margin: 0 0 var(--space-2);
+    color: var(--color-primary);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.page-title {
+    margin: 0;
+    font-size: clamp(32px, 5vw, 48px);
+    line-height: 1.1;
+}
+
+.page-description {
+    max-width: 640px;
+    margin: var(--space-4) 0 0;
+    color: var(--color-text-secondary);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* =========================================================
+    BADGE PROGRESS
+   ========================================================= */
+
+.badge-progress-card {
+    margin-bottom: var(--space-10);
+    padding: var(--space-6);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.badge-progress-content {
+    display: grid;
+    gap: var(--space-4);
+}
+
+.badge-progress-content > div:first-child {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+}
+
+.badge-progress-label {
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.badge-progress-count {
+    color: var(--color-primary);
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.badge-progress-track {
+    width: 100%;
+    height: 12px;
+    overflow: hidden;
+    background: var(--color-border);
+    border-radius: 999px;
+}
+
+.badge-progress-bar {
+    width: 0;
+    height: 100%;
+    background: var(--color-primary);
+    border-radius: inherit;
+    transition: width 250ms ease;
+}
+
+.badge-progress-description {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* =========================================================
+    BADGE COLLECTION HEADER
+   ========================================================= */
+
+.badge-filter-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+.badge-filter-summary span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding-inline: var(--space-3);
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    color: var(--color-text-secondary);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* =========================================================
+    BADGE GRID
+   ========================================================= */
+
+.badge-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: var(--space-5);
+}
+
+/* =========================================================
+    BADGE CARD
+   ========================================================= */
+
+.badge-card {
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-5);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    transition:
+        transform 150ms ease,
+        box-shadow 150ms ease,
+        border-color 150ms ease;
+}
+
+.badge-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.badge-card--unlocked {
+    border-color: var(--color-primary);
+}
+
+.badge-card--locked {
+    opacity: 0.72;
+}
+
+.badge-card-icon {
+    width: 72px;
+    height: 72px;
+    display: grid;
+    place-items: center;
+    margin-bottom: var(--space-5);
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    color: var(--color-primary);
+    font-size: 28px;
+    font-weight: 800;
+}
+
+.badge-card--unlocked
+.badge-card-icon {
+    background: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface));
+    border-color: var(--color-primary);
+}
+
+.badge-card-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.badge-status {
+    margin-bottom: var(--space-2);
+    color: var(--color-text-muted);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.badge-card--unlocked
+.badge-status {
+    color: var(--color-success);
+}
+
+.badge-card-title {
+    margin: 0;
+    font-size: 19px;
+    line-height: 1.3;
+}
+
+.badge-card-description {
+    margin: var(--space-3) 0 0;
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.badge-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: auto;
+    padding-top: var(--space-5);
+}
+
+.badge-card-meta span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding-inline: var(--space-3);
+    background: var(--color-background);
+    border-radius: 999px;
+    color: var(--color-text-muted);
+    font-size: 11px;
+    font-weight: 700;
+}
+
 /* ==============================
     Footer
 ================================= */
@@ -900,6 +1133,27 @@ body {
     }
 
     .completion-actions a {
+        width: 100%;
+    }
+
+    .badge-page {
+        padding-block: var(--space-6);
+    }
+
+    .badge-progress-card {
+        padding: var(--space-5);
+    }
+
+    .badge-progress-content > div:first-child {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .badge-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .badge-filter-summary {
         width: 100%;
     }
 }

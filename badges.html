@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Travel Quest badge collection">
+        <title>Badge Collection — Travel Quest</title>
+        <link rel="stylesheet" href="./css/reset.css">
+        <link rel="stylesheet" href="./css/variables.css">
+        <link rel="stylesheet" href="./css/components.css">
+        <link rel="stylesheet" href="./css/main.css">
+    </head>
+
+    <body>
+        <header class="site-header">
+            <div class="container">
+                <nav class="site-nav" aria-label="Main navigation">
+                    <a class="site-logo" href="./index.html" aria-label="Travel Quest home">Travel Quest</a>
+                    <div class="site-nav-links">
+                        <a href="./index.html">Dashboard</a>
+                        <a href="./index.html#quests">Quests</a>
+                        <a href="./badges.html" aria-current="page">Badges</a>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <main id="badge-app" class="badge-page">
+            <div class="container">
+                <a class="back-link" href="./index.html">← Back to Dashboard</a>
+                <header class="badge-page-header">
+                    <div>
+                        <p class="section-eyebrow">Your Collection</p>
+                        <h1 class="page-title">Badge Collection</h1>
+                        <p class="page-description">Complete quests to unlock badges and build your travel collection.</p>
+                    </div>
+                </header>
+
+                <section class="badge-progress-card" aria-labelledby="badge-progress-title">
+                    <div class="badge-progress-content">
+                        <div>
+                            <span id="badge-progress-title" class="badge-progress-label">Badge Progress</span>
+                            <strong id="badge-progress-count" class="badge-progress-count">0 / 0</strong>
+                        </div>
+
+                        <div class="badge-progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Badge collection progress" id="badge-progress-bar-wrapper">
+                            <div id="badge-progress-bar" class="badge-progress-bar"></div>
+                        </div>
+
+                        <p id="badge-progress-description" class="badge-progress-description">Start completing quests to unlock your first badge. </p>
+                    </div>
+                </section>
+
+                <section class="badge-collection-section" aria-labelledby="all-badges-title">
+                    <header class="section-header">
+                        <div>
+                            <h2 id="all-badges-title" class="section-title">All Badges</h2>
+                            <p class="section-description">Explore badges available across the Travel Quest journey.</p>
+                        </div>
+
+                        <div id="badge-filter-summary" class="badge-filter-summary"></div>
+                    </header>
+
+                    <div id="badge-grid" class="badge-grid"></div>
+                </section>
+            </div>
+        </main>
+
+        <script type="module" src="./js/pages/badges.js"></script>
+    </body>
+</html>
