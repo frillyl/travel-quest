@@ -1,4 +1,6 @@
-const XP_PER_LEVEL = 500;
+import { XP_CONFIG } from "../config/xp-config.js";
+
+const { XP_PER_LEVEL } = XP_CONFIG;
 
 export function getLevelFromXP(xp) {
     if (!Number.isFinite(xp) || xp < 0) {
@@ -13,27 +15,26 @@ export function getXPForLevel(level) {
         return 0;
     }
 
-    return (level - 1) * XP_PER_LEVEL;
+    return (
+        (level - 1) * XP_PER_LEVEL
+    );
 }
 
 export function getProgression(xp) {
-    const safeXP = Number.isFinite(xp) && xp >= 0 ? xp : 0;
+    const safeXP = Number.isFinite(xp) && xp >= 0 ? xp: 0;
     const level = getLevelFromXP(safeXP);
-    const currentLevelXP = getXPForLevel(level);
-    const nextLevelXP = getXPForLevel(level + 1);
-    const xpIntoCurrentLevel = safeXP - currentLevelXP;
-    const xpRequiredForNextLevel = nextLevelXP - currentLevelXP;
-    const percentage = Math.min(100, Math.round((xpIntoCurrentLevel / xpRequiredForNextLevel) * 100));
+    const nextLevel = level + 1;
+    const nextLevelXP = getXPForLevel(nextLevel);
+    const percentage = nextLevelXP > 0 ? Math.min(100, Math.round((safeXP / nextLevelXP) * 100)) : 100;
 
     return {
         level,
         currentXP: safeXP,
-        currentLevelXP,
+        currentLevelXP: getXPForLevel(level),
         nextLevelXP,
-        xpIntoCurrentLevel,
-        xpRequiredForNextLevel,
-        xpRemaining:
-            Math.max(0, nextLevelXP - safeXP),
+        xpIntoCurrentLevel: safeXP - getXPForLevel(level),
+        xpRequiredForNextLevel: nextLevelXP - getXPForLevel(level),
+        xpRemaining: Math.max(0, nextLevelXP - safeXP),
         percentage
     };
 }

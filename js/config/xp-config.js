@@ -1,0 +1,5 @@
+export const XP_CONFIG = Object.freeze({
+    XP_PER_LEVEL: 500,
+    TASK_COMPLETION_XP: 100,
+    QUEST_COMPLETION_BONUS_XP: 250
+});

@@ -1055,6 +1055,139 @@ body {
     font-weight: 700;
 }
 
+/* =========================================================
+    DASHBOARD PROGRESSION
+   ========================================================= */
+
+.progression-section {
+    padding-block: var(--space-6);
+}
+
+.progression-card {
+    padding: var(--space-6);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.progression-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-6);
+    margin-bottom: var(--space-8);
+}
+
+.progression-title {
+    margin: 0;
+    font-size: clamp(24px, 4vw, 32px);
+    line-height: 1.2;
+}
+
+.level-badge {
+    min-width: 76px;
+    min-height: 76px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface));
+    border: 2px solid var(--color-primary);
+    border-radius: 50%;
+}
+
+.level-badge-label {
+    color: var(--color-text-muted);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+}
+
+.level-badge-value {
+    color: var(--color-primary);
+    font-size: 28px;
+    line-height: 1;
+    margin-top: 4px;
+}
+
+
+/* =========================================================
+    XP
+   ========================================================= */
+
+.progression-xp {
+    display: grid;
+    gap: var(--space-3);
+}
+
+.progression-xp-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-4);
+}
+
+.progression-xp-header > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.progression-label,
+.progression-next-level span {
+    color: var(--color-text-muted);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.progression-xp-value {
+    color: var(--color-primary);
+    font-size: 24px;
+}
+
+.progression-next-level {
+    text-align: right;
+}
+
+.progression-next-level strong {
+    color: var(--color-text-secondary);
+    font-size: 14px;
+}
+
+
+/* =========================================================
+    XP PROGRESS BAR
+   ========================================================= */
+
+.xp-progress-track {
+    width: 100%;
+    height: 14px;
+    overflow: hidden;
+    background: var(--color-border);
+    border-radius: 999px;
+}
+
+.xp-progress-bar {
+    width: 0;
+    height: 100%;
+    background: var(--color-primary);
+    border-radius: inherit;
+    transition: width 300ms ease;
+}
+
+.progression-xp-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    color: var(--color-text-muted);
+    font-size: 12px;
+    font-weight: 600;
+}
+
 /* ==============================
     Footer
 ================================= */
@@ -1075,9 +1208,11 @@ body {
     .city-grid {
         grid-template-columns: repeat(3, 1fr);
     }
+
     .dashboard-hero {
         grid-template-columns: 1fr;
     }
+
     .xp-card {
         width: 100%;
     }
@@ -1087,22 +1222,28 @@ body {
     .main-nav {
         display: none;
     }
+
     .profile-name {
         display: none;
     }
+
     .stats-grid,
     .quest-grid {
         grid-template-columns: 1fr;
     }
+
     .city-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+
     .dashboard {
         padding-block: var(--space-8);
     }
+
     .dashboard-title {
         font-size: 36px;
     }
+
     .quest-filters {
         grid-template-columns: 1fr;
     }
@@ -1120,7 +1261,6 @@ body {
     .reward-item {
         align-items: flex-start;
         flex-direction: column;
-
         gap: var(--space-2);
     }
 
@@ -1156,13 +1296,40 @@ body {
     .badge-filter-summary {
         width: 100%;
     }
+
+    .progression-card {
+        padding: var(--space-5);
+    }
+
+    .progression-header {
+        align-items: flex-start;
+    }
+
+    .level-badge {
+        min-width: 64px;
+        min-height: 64px;
+    }
+
+    .level-badge-value {
+        font-size: 24px;
+    }
+
+    .progression-xp-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .progression-next-level {
+        text-align: left;
+    }
 }
 
 @media (max-width: 480px) {
     .city-grid {
         grid-template-columns: 1fr;
     }
-
+    
     .city-card {
         min-height: 160px;
     }

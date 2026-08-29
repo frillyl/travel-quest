@@ -3,6 +3,8 @@ import { quests } from "../data/quests.js";
 import { getState } from "../services/storage.js";
 import { categories } from "../data/categories.js";
 import { filterQuests } from "../services/quest-service.js";
+import { getProgression } from "../services/progression-service.js";
+import { XP_CONFIG } from "../config/xp-config.js";
 
 function escapeHTML(value) {
     const div = document.createElement("div");
@@ -73,7 +75,13 @@ function renderQuestCard(quest, state) {
                 </span>
 
                 <span class="quest-xp">
-                    +${formatNumber(quest.xp)} XP
+                    +${formatNumber(
+                        quest.tasks.length *
+                        XP_CONFIG.TASK_COMPLETION_XP
+                    )} XP
+                    + ${formatNumber(
+                        XP_CONFIG.QUEST_COMPLETION_BONUS_XP
+                    )} bonus
                 </span>
             </div>
 
@@ -84,9 +92,66 @@ function renderQuestCard(quest, state) {
     `;
 }
 
+function renderProgression(progression) {
+    return `
+        <div class="progression-card">
+            <div class="progression-header">
+                <div>
+                    <p class="section-eyebrow">Your Journey</p>
+                    <h2 id="progression-title" class="progression-title">Travel Progress</h2>
+                </div>
+
+                <div class="level-badge" aria-label="Current player level">
+                    <span class="level-badge-label">LEVEL</span>
+                    <strong id="player-level" class="level-badge-value">
+                        ${progression.level}
+                    </strong>
+                </div>
+            </div>
+
+            <div class="progression-xp">
+                <div class="progression-xp-header">
+                    <div>
+                        <span class="progression-label">Total XP</span>
+                        <strong id="player-xp" class="progression-xp-value">
+                            ${formatNumber(
+                                progression.currentXP
+                            )} XP
+                        </strong>
+                    </div>
+
+                    <div class="progression-next-level">
+                        <span>Next Level</span>
+                        <strong id="next-level-xp">
+                            ${formatNumber(
+                                progression.nextLevelXP
+                            )} XP
+                        </strong>
+                    </div>
+                </div>
+
+                <div class="xp-progress-track" role="progressbar" aria-label="Player XP progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${progression.percentage}" id="xp-progress-track">
+                    <div id="xp-progress-bar" class="xp-progress-bar" style="width: ${progression.percentage}%"></div>
+                </div>
+
+                <div class="progression-xp-footer">
+                    <span id="xp-progress-text">
+                        ${progression.xpRemaining > 0 ? `${formatNumber(progression.xpRemaining)} XP remaining` : "Max level reached"}
+                    </span>
+
+                    <span id="xp-progress-percentage">
+                        ${progression.percentage}%
+                    </span>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 export function renderDashboard(container) {
     const initialQuests = quests;
     const state = getState();
+    const progression = getProgression(state.xp);
     const completedQuestCount = state.completedQuests.length;
     const badgeCount = state.badges.length;
 
@@ -110,6 +175,12 @@ export function renderDashboard(container) {
                         <p class="xp-card-meta">Keep exploring to earn more.</p>
                     </aside>
                 </header>
+
+                <section class="progression-section" aria-labelledby="progression-title">
+                    <div class="container">
+                        ${renderProgression(progression)}
+                    </div>
+                </section>
 
                 <section class="stats-grid" aria-label="Your Travel Quest statistics">
                     <article class="stat-card">
@@ -215,28 +286,17 @@ function bindDashboardEvents(container) {
     const questList = container.querySelector("#quest-list");
     const resultCount = container.querySelector("#quest-result-count");
 
-    if (
-        !cityFilter ||
-        !categoryFilter ||
-        !questList ||
-        !resultCount
-    ) {
+    if (!cityFilter || !categoryFilter || !questList || !resultCount) {
         return;
     }
 
     function updateQuestList() {
         const cityId = cityFilter.value;
         const category = categoryFilter.value;
-        const filteredQuests = filterQuests({
-            cityId,
-            category
-        });
+        const filteredQuests = filterQuests({ cityId, category });
         const state = getState();
 
-        resultCount.textContent =
-        `${filteredQuests.length} ${
-            filteredQuests.length === 1 ? "quest" : "quests"
-        } available`;
+        resultCount.textContent = `${filteredQuests.length} ${ filteredQuests.length === 1 ? "quest" : "quests" } available`;
 
         if (filteredQuests.length === 0) {
             questList.innerHTML = `
@@ -249,13 +309,9 @@ function bindDashboardEvents(container) {
             return;
         }
 
-        questList.innerHTML = filteredQuests.map(quest =>
-            renderQuestCard(quest, state)
-        ).join("");
-
+        questList.innerHTML = filteredQuests.map(quest => renderQuestCard(quest, state)).join("");
         bindQuestButtons(questList);
     }
-
     cityFilter.addEventListener("change", updateQuestList);
     categoryFilter.addEventListener("change", updateQuestList);
 
@@ -264,7 +320,7 @@ function bindDashboardEvents(container) {
 
 function bindQuestButtons(container) {
     const questButtons = container.querySelectorAll("[data-quest-id]");
-
+    
     questButtons.forEach(button => {
         button.addEventListener("click", () => {
             const questId = button.dataset.questId;
@@ -276,29 +332,4 @@ function bindQuestButtons(container) {
             window.location.href = `./index.html?quest=${encodeURIComponent(questId)}`;
         });
     });
-}
-
-function renderStats(state) {
-    return `
-        <div class="stat-card">
-            <span class="stat-label">Total XP</span>
-            <strong class="stat-value">
-                ${formatNumber(state.xp)}
-            </strong>
-        </div>
-
-        <div class="stat-card">
-            <span class="stat-label">Quests Completed</span>
-            <strong class="stat-value">
-                ${state.completedQuests.length}
-            </strong>
-        </div>
-
-        <div class="stat-card">
-            <span class="stat-label">Badges</span>
-            <strong class="stat-value">
-                ${state.badges.length}
-            </strong>
-        </div>
-    `;
 }

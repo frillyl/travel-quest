@@ -1,7 +1,8 @@
 import { cities } from "../data/cities.js";
 import { getQuestById, getQuestProgress, completeTask } from "../services/quest-service.js";
-import { completeQuest } from "../services/reward-service.js";
+import { completeTaskReward, completeQuest } from "../services/reward-service.js";
 import { getState } from "../services/storage.js";
+import { XP_CONFIG } from "../config/xp-config.js";
 
 function escapeHTML(value) {
     const div = document.createElement("div");
@@ -22,7 +23,7 @@ function getCityName(cityId) {
 }
 
 function renderTask(task, state) {
-    const isCompleted =state.completedTasks.includes(task.id);
+    const isCompleted = state.completedTasks.includes(task.id);
 
     return `
         <li class="task-item ${isCompleted ? "completed" : ""}">
@@ -40,10 +41,17 @@ function renderTask(task, state) {
             </div>
 
             ${
-                isCompleted ? `
-                    <span class="task-completed-label">Completed</span>
-                ` : ""
+                isCompleted
+                    ? `
+                        <span class="task-completed-label">
+                            Completed
+                        </span>
+                    ` : ""
             }
+
+            <span class="task-xp">
+                +${XP_CONFIG.TASK_COMPLETION_XP} XP
+            </span>
         </li>
     `;
 }
@@ -69,14 +77,16 @@ function renderProgress(progress) {
 
 function renderCompletionScreen(container, quest, result) {
     const cityName = getCityName(quest.cityId);
-
     const rewardMessage = result.isNewCompletion ? `You completed the ${cityName} quest and earned your rewards.` : "This quest has already been completed.";
 
     container.innerHTML = `
         <main class="quest-completion">
             <div class="container">
                 <section class="completion-card" aria-labelledby="completion-title">
-                    <div class="completion-icon" aria-hidden="true">✓</div>
+                    <div class="completion-icon" aria-hidden="true">
+                        ✓
+                    </div>
+
                     <p class="completion-eyebrow">Quest Complete</p>
                     <h1 id="completion-title" class="completion-title">
                         ${escapeHTML(quest.title)}
@@ -85,32 +95,32 @@ function renderCompletionScreen(container, quest, result) {
                         ${escapeHTML(rewardMessage)}
                     </p>
 
-                    ${
-                        result.isNewCompletion
+                    ${result.isNewCompletion
                         ? `
                             <div class="reward-summary">
                                 <div class="reward-item">
-                                    <span class="reward-label">XP Earned</span>
+                                    <span class="reward-label">Task XP</span>
                                     <strong class="reward-value">
-                                        +${result.xpEarned} XP
+                                        +${quest.tasks.length * XP_CONFIG.TASK_COMPLETION_XP} XP
                                     </strong>
                                 </div>
 
-                                ${
-                                    quest.badge && result.badgeUnlocked
-                                    ? `
-                                        <div class="reward-item">
-                                            <span class="reward-label">Badge Unlocked</span>
-                                            <strong class="reward-value">
-                                                ${escapeHTML(
-                                                    quest.badge.name
-                                                )}
-                                            </strong>
-                                        </div>
-                                    ` : ""
-                                }
-                            </div>
-                        ` : ""
+                                <div class="reward-item">
+                                    <span class="reward-label">Quest Bonus</span>
+                                    <strong class="reward-value">
+                                        +${result.bonusXP} XP
+                                    </strong>
+                                </div>
+
+                                <div class="reward-item">
+                                    <span class="reward-label">Total XP Earned</span>
+                                    <strong class="reward-value">
+                                        +${
+                                            (quest.tasks.length * XP_CONFIG.TASK_COMPLETION_XP) + result.bonusXP
+                                        } XP
+                                    </strong>
+                                </div>
+                            ` : ""
                     }
 
                     <div class="completion-actions">
@@ -131,11 +141,15 @@ function renderAlreadyCompleted(container, quest) {
             <div class="container">
                 <section class="completion-card" aria-labelledby="completed-title">
                     <div class="completion-icon" aria-hidden="true">✓</div>
-                        <p class="completion-eyebrow">Quest Completed</p>
-                        <h1 id="completed-title" class="completion-title">
-                            ${escapeHTML(quest.title)}
-                        </h1>
-                        <p class="completion-description">You have already completed this quest.</p>
+
+                    <p class="completion-eyebrow">Quest Completed</p>
+                    <h1 id="completed-title" class="completion-title">
+                        ${escapeHTML(quest.title)}
+                    </h1>
+                    <p class="completion-description">
+                        You have already completed this quest.
+                    </p>
+
                     <div class="reward-summary">
                         <div class="reward-item">
                             <span class="reward-label">Current XP</span>
@@ -144,17 +158,14 @@ function renderAlreadyCompleted(container, quest) {
                             </strong>
                         </div>
 
-                        ${
-                        quest.badge
+                        ${quest.badge
                             ? `
-                            <div class="reward-item">
-                                <span class="reward-label">Badge</span>
-                                <strong class="reward-value">
-                                    ${escapeHTML(
-                                        quest.badge.name
-                                    )}
-                                </strong>
-                            </div>
+                                <div class="reward-item">
+                                    <span class="reward-label">Badge</span>
+                                    <strong class="reward-value">
+                                        ${escapeHTML(quest.badge.name)}
+                                    </strong>
+                                    </div>
                             ` : ""
                         }
                     </div>
@@ -172,22 +183,34 @@ function renderAlreadyCompleted(container, quest) {
 function bindTaskEvents(container, quest) {
     const taskButtons = container.querySelectorAll("[data-task-id]");
 
-    taskButtons.forEach(button => {button.addEventListener("click", () => {
+    taskButtons.forEach(button => {
+        button.addEventListener("click", () => {
             const taskId = button.dataset.taskId;
 
             if (!taskId) {
                 return;
             }
 
+            const state = getState();
+            const alreadyCompleted = state.completedTasks.includes(taskId);
+
+            if (alreadyCompleted) {
+                return;
+            }
+
+            completeTaskReward(taskId);
             completeTask(taskId);
+
             const progress = getQuestProgress(quest);
 
             if (progress.isCompleted) {
                 const result = completeQuest(quest);
+
                 renderCompletionScreen(container, quest, result);
 
                 return;
             }
+
             renderQuestDetail(container, quest.id);
         });
     });
@@ -212,11 +235,21 @@ export function renderQuestDetail(container, questId) {
 
     if (!quest) {
         renderQuestNotFound(container);
+
         return;
     }
 
     const state = getState();
     const progress = getQuestProgress(quest);
+
+    if (
+        state.completedQuests.includes(quest.id)
+    ) {
+        renderAlreadyCompleted(container, quest);
+
+        return;
+    }
+
     const cityName = getCityName(quest.cityId);
 
     container.innerHTML = `
@@ -226,17 +259,14 @@ export function renderQuestDetail(container, questId) {
                 <header class="quest-detail-header">
                     <div class="quest-detail-heading">
                         <span class="quest-category">
-                            ${escapeHTML(
-                                capitalize(quest.category)
-                            )}
+                            ${escapeHTML(capitalize(quest.category))}
                         </span>
+
                         <h1 class="quest-detail-title">
                             ${escapeHTML(quest.title)}
                         </h1>
                         <p class="quest-detail-description">
-                            ${escapeHTML(
-                                quest.description
-                            )}
+                            ${escapeHTML(quest.description)}
                         </p>
 
                         <div class="quest-detail-meta">
@@ -247,7 +277,10 @@ export function renderQuestDetail(container, questId) {
                                 ${quest.tasks.length} Tasks
                             </span>
                             <strong>
-                                +${quest.xp} XP
+                                +${quest.tasks.length * XP_CONFIG.TASK_COMPLETION_XP} XP Tasks
+                            </strong>
+                            <strong>
+                                +${XP_CONFIG.QUEST_COMPLETION_BONUS_XP} XP Bonus
                             </strong>
                         </div>
                     </div>
@@ -255,6 +288,7 @@ export function renderQuestDetail(container, questId) {
 
                 <section class="quest-progress-section" aria-labelledby="progress-title">
                     <h2 id="progress-title" class="sr-only">Quest Progress</h2>
+
                     ${renderProgress(progress)}
                 </section>
 
